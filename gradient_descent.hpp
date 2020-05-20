@@ -8,7 +8,12 @@
 namespace numeric {
 
 	/*!
-	 *
+	 * Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function. 
+	 * To find a local minimum of a function using gradient descent, we take steps proportional to the negative of the gradient 
+	 * (or approximate gradient) of the function at the current point. 
+	 * But if we instead take steps proportional to the positive of the gradient, we approach a local maximum of that function; 
+	 * the procedure is then known as gradient ascent. 
+	 * Gradient descent was originally proposed by Cauchy in 1847.
 	 */
 	std::vector<double> gradient_descent(std::function<double(std::vector<double>)> f, std::vector<double> initial_xs){
 
@@ -45,10 +50,10 @@ namespace numeric {
 				best_xs = xs;
 			}
 
-			// sanity
+			// ensure learning rate is reasonably limited [0 .. 1]
 			learning_rate = std::min(std::max(0.0, learning_rate), 1.0);
 
-			// escape
+			// escape optimization loop if learning rate is too small
 			if(learning_rate < pow(10,-16)){
 				break;
 			}
