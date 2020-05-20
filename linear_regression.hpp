@@ -10,7 +10,7 @@
 namespace numeric {
 
 	/*!
-	 *
+	 * 
 	 */
 	std::vector<double> linear_regression(
 		std::vector<std::vector<double>> xs,
@@ -21,7 +21,7 @@ namespace numeric {
 
 		// build function to be passed to gradient descent
 		auto f = [pred_function, loss_function, xs, ys](std::vector<double> params){
-			// std::cout << params[0] << "\t" << params[1] << std::endl;
+
 			// run prediction function
 			std::vector<double> pred_ys = ys;
 			for(int i=0;i<xs.size();i++){
@@ -53,7 +53,6 @@ namespace numeric {
 				N *= 3;
 			}
 		}
-		// std::cout << "Found " << N << " pretty options" << std::endl;
 		std::vector<int> M;
 		for(int i=0;i<out_params.size();i++){M.push_back(0);}
 		for(int i=0;i<N;i++){
@@ -67,7 +66,6 @@ namespace numeric {
 			if(loss < f(out_params)){
 				out_params = pretty_params;
 			}
-			// std::cout << "c0 : " << pretty_params[0] << ", c1 : " << pretty_params[1] << ", loss : " << loss << std::endl;
 
 			// update index (moving to next configuration of pretty params
 			M[0]++;
@@ -84,7 +82,9 @@ namespace numeric {
 	}
 
 	/*!
-	 *
+	 * Polynomial Regression is a form of linear regression in which 
+	 * the relationship between the independent variable x and dependent variable y 
+	 * is modeled as an nth degree polynomial.
 	 */
 	std::vector<double> linear_regression(std::vector<double> xs, std::vector<double> ys, int degree_of_polynomial){
 
