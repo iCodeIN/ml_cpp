@@ -6,9 +6,17 @@
 namespace numeric {
 
 	/*!
-	 *
+	 * In mathematics, a partial derivative of a function of several variables is its derivative with respect to one of those variables, 
+	 * with the others held constant (as opposed to the total derivative, in which all variables are allowed to vary). 
+	 * Partial derivatives are used in vector calculus and differential geometry.
 	 */
 	std::function<double(std::vector<double>,int)> partial_derivative(std::function<double(std::vector<double>)> f){
+
+		/*
+		 * returns a function that represents the partial derivative
+		 * its inputs are the coordinates at which to consider the partial derivative, 
+		 * and the index of the variable to be allowed to vary.
+		 */
 		return [f](std::vector<double> xs, int var_index){
 			auto eps = 0.0001;
 
