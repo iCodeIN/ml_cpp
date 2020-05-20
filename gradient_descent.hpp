@@ -15,7 +15,7 @@ namespace numeric {
 	 * the procedure is then known as gradient ascent. 
 	 * Gradient descent was originally proposed by Cauchy in 1847.
 	 */
-	std::vector<double> gradient_descent(std::function<double(std::vector<double>)> f, std::vector<double> initial_xs){
+	std::vector<double> gradient_descent(std::function<double(std::vector<double>)> f, std::vector<double> initial_xs, int max_number_of_iterations){
 
 		// learning rate
 		auto learning_rate = 1.0;
@@ -29,8 +29,7 @@ namespace numeric {
 		// iterations of gradient descent
 		auto best_xs = xs;
 		auto best_y = f(xs);
-		auto N = 10000;
-		for(int j=0;j<N;j++){
+		for(int j=0;j<max_number_of_iterations;j++){
 
 			// calculate partial derivatives
 			for(int i=0;i<xs.size();i++){ ds[i] = partial_derivative(f)(xs, i); }
@@ -43,7 +42,7 @@ namespace numeric {
 			if(y > best_y){
 				// slightly smaller learning rate
 				learning_rate *= 0.99;
-				N++;
+				max_number_of_iterations++;
 			} else {
 				// store values
 				best_y = y;
@@ -69,7 +68,7 @@ namespace numeric {
 	 */
 	double gradient_descent(std::function<double(double)> f, double initial_x){
 		auto f2 = [f](std::vector<double> xs){ return f(xs[0]); };
-		return gradient_descent(f2, {initial_x})[0];
+		return gradient_descent(f2, {initial_x}, 16384)[0];
 	}
 
 }
