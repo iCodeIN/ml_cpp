@@ -31,7 +31,11 @@ namespace numeric {
 	}
 
 	/*!
-	 *
+	 * The derivative of a function of a real variable measures the sensitivity to change 
+	 * of the function value (output value) with respect to a change in its argument (input value). 
+	 * Derivatives are a fundamental tool of calculus. 
+	 * For example, the derivative of the position of a moving object with respect to time is the object's velocity: 
+	 * this measures how quickly the position of the object changes when time advances.
 	 */
 	std::function<double(double)> derivative(std::function<double(double)> f){
 		return [f](double x){
