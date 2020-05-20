@@ -43,11 +43,15 @@ namespace numeric {
 		std::vector<std::vector<double>> pretty_params_ops;
 		for(int i=0;i<out_params.size();i++){
 			auto p = out_params[i];
-			pretty_params_ops.push_back({
+			if(p == floor(p)){
+				pretty_params_ops.push_back({p});
+			} else {
+				pretty_params_ops.push_back({
 						floor(p),	// p rounded up
 						ceil(p), 	// p rounded down
 						p});		// p itself
-			N *= 3;
+				N *= 3;
+			}
 		}
 		// std::cout << "Found " << N << " pretty options" << std::endl;
 		std::vector<int> M;
