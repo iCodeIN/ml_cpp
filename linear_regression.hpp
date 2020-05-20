@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <assert.h>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -10,7 +11,9 @@
 namespace numeric {
 
 	/*!
-	 * 
+	 * In statistics, linear regression is a linear approach to modeling the relationship 
+	 * between a scalar response (or dependent variable) and one or more explanatory variables (or independent variables). 
+	 * The case of one explanatory variable is called simple linear regression.
 	 */
 	std::vector<double> linear_regression(
 		std::vector<std::vector<double>> xs,
@@ -18,6 +21,12 @@ namespace numeric {
 		std::function<double(std::vector<double>, std::vector<double>)> pred_function,
 		std::vector<double> initial_params,
 		std::function<double(std::vector<double>, std::vector<double>)> loss_function){
+
+		// asserts
+		assert(xs.size() > 0);
+		assert(ys.size() > 0);
+		assert(xs.size() == ys.size());
+		for(int i=0;i<xs.size();i++){assert(xs[0].size() == xs[i].size());}
 
 		// build function to be passed to gradient descent
 		auto f = [pred_function, loss_function, xs, ys](std::vector<double> params){
@@ -86,23 +95,26 @@ namespace numeric {
 	 * the relationship between the independent variable x and dependent variable y 
 	 * is modeled as an nth degree polynomial.
 	 */
-	std::vector<double> linear_regression(std::vector<double> xs, std::vector<double> ys, int degree_of_polynomial){
+	std::vector<double> polynomial_regression(std::vector<double> xs, std::vector<double> ys, int degree_of_polynomial){
+
+		assert(degree_of_polynomial >= 0);
 
 		// build loss function
 		auto mae_loss_function = [](std::vector<double> pred_ys, std::vector<double> ys){
+			assert(pred_ys.size() == ys.size());
 			auto k = 0.0;
 			for(int i=0;i<pred_ys.size();i++){
-				//std::cout << "\tpred y : " << pred_ys[i] << ", y : " << ys[i] << std::endl;
 				auto j = abs(pred_ys[i] - ys[i]);
 				k += j;
 			}
 			k /= pred_ys.size();
-			// std::cout << "Loss : " << k << std::endl;
 			return k;
 		};
 
 		// build pred function
 		auto poly_pred_function = [](std::vector<double> coeffs, std::vector<double> xs){
+			assert(xs.size() == 1);
+			assert(coeffs.size() >= 1);
 			auto x = xs[0];
 			auto y = 0.0;
 			for(int i=0;i<coeffs.size();i++){

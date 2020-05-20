@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>
 #include <functional>
 #include <vector>
 
@@ -18,6 +19,10 @@ namespace numeric {
 		 * and the index of the variable to be allowed to vary.
 		 */
 		return [f](std::vector<double> xs, int var_index){
+
+			assert(var_index >= 0);
+			assert(var_index < xs.size());
+
 			auto eps = 0.0001;
 
 			std::vector<double> xs_mod_0 = xs;

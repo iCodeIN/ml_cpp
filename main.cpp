@@ -60,7 +60,7 @@ void test_linear_regression(){
 	}
 
 	// linear regression
-	auto coeffs = numeric::linear_regression(xs, ys, 2);
+	auto coeffs = numeric::polynomial_regression(xs, ys, 2);
 
 	// print
 	std::cout << "test_linear_regression" << std::endl;
