@@ -13,7 +13,11 @@ namespace numeric {
 	 * the relationship between the independent variable x and dependent variable y 
 	 * is modeled as an nth degree polynomial.
 	 */
-	std::vector<float> polynomial_regression(const std::vector<float>& xs, const std::vector<float>& ys, int degree_of_polynomial){
+	std::vector<float> polynomial_regression(
+		const std::vector<float>& xs, 	//! xs datapoints
+		const std::vector<float>& ys, 	//! ys datapoints
+		int degree_of_polynomial	//! maximum degree of the polynomial to fit
+		){
 
 		assert(degree_of_polynomial >= 0);
 		assert(xs.size() > 0);
