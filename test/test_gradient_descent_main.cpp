@@ -9,7 +9,7 @@
  */
 void test_gradient_descent_001(){
 
-	auto cos_f = [](double x){return cos(x);};
+	auto cos_f = [](float x){return 0.0f + cos(x);};
 	auto cos_f_min = numeric::gradient_descent(cos_f, 2);
 
 	// print
@@ -24,7 +24,7 @@ void test_gradient_descent_001(){
  */
 void test_gradient_descent_002(){
 
-	auto sin_f = [](double x){return sin(x);};
+	auto sin_f = [](float x){return 0.0f + sin(x);};
 	auto sin_f_min = numeric::gradient_descent(sin_f, 2);
 
 	// print

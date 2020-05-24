@@ -5,15 +5,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-void test_polynomial_regression(double max_noise, int degree){
+void test_polynomial_regression(float max_noise, int degree){
 
 	srand(time(NULL));
-	std::vector<double> coeffs;
+	std::vector<float> coeffs;
 	for(int i=0;i<=degree;i++){
 		auto c = rand() % 10 + 1.0;
 		coeffs.push_back(c);
 	}
-	auto f0 = [coeffs](double x){ 
+	auto f0 = [coeffs](float x){ 
 		auto y = 0.0;
 		for(int i=0;i<coeffs.size();i++){
 			y += pow(x, i) * coeffs[i];
@@ -23,11 +23,11 @@ void test_polynomial_regression(double max_noise, int degree){
 	
 	// print
 	std::cout << std::endl;
-	std::cout << "test_linear_regression" << std::endl;
+	std::cout << "Attempting to re-create a random polynomial" << std::endl;
 
 	// build xs/ys
-	std::vector<double> xs;
-	std::vector<double> ys;
+	std::vector<float> xs;
+	std::vector<float> ys;
 	for(int i=0;i<20;i++){
 		xs.push_back(i);
 
@@ -48,7 +48,7 @@ void test_polynomial_regression(double max_noise, int degree){
 	}
 	std::cout << "}" << std::endl;
 
-	std::cout << "Regres Coeffs. : {";
+	std::cout << "Approx Coeffs. : {";
 	for(int i=0;i<approx_coeffs.size();i++){
 		std::cout << approx_coeffs[i] << ", ";
 	}
@@ -57,13 +57,13 @@ void test_polynomial_regression(double max_noise, int degree){
 
 int main(){
 
-	test_polynomial_regression(0.5, 1);
-	test_polynomial_regression(0.5, 1);
+	test_polynomial_regression(0.1, 1);
+	test_polynomial_regression(0.2, 1);
 	test_polynomial_regression(0.5, 1);
 
-	test_polynomial_regression(0.5, 2);
+	test_polynomial_regression(0.1, 2);
 	test_polynomial_regression(0.5, 2);
 
-	test_polynomial_regression(0.5, 3);
+	test_polynomial_regression(0.1, 3);
 	test_polynomial_regression(0.5, 3);
 }

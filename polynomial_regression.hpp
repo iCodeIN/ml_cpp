@@ -1,5 +1,9 @@
 #pragma once
 
+#include <assert.h>
+#include <functional>
+#include <vector>
+
 #include "linear_regression.hpp"
 
 namespace numeric {
@@ -9,12 +13,16 @@ namespace numeric {
 	 * the relationship between the independent variable x and dependent variable y 
 	 * is modeled as an nth degree polynomial.
 	 */
-	std::vector<double> polynomial_regression(std::vector<double> xs, std::vector<double> ys, int degree_of_polynomial){
+	std::vector<float> polynomial_regression(const std::vector<float>& xs, const std::vector<float>& ys, int degree_of_polynomial){
 
 		assert(degree_of_polynomial >= 0);
+		assert(xs.size() > 0);
+		assert(ys.size() > 0);;
+		assert(xs.size() == ys.size());
+
 
 		// build loss function
-		auto mae_loss_function = [](std::vector<double> pred_ys, std::vector<double> ys){
+		auto mae_loss_function = [](std::vector<float> pred_ys, std::vector<float> ys){
 			assert(pred_ys.size() == ys.size());
 			auto k = 0.0;
 			for(int i=0;i<pred_ys.size();i++){
@@ -26,7 +34,7 @@ namespace numeric {
 		};
 
 		// build pred function
-		auto poly_pred_function = [](std::vector<double> coeffs, std::vector<double> xs){
+		auto poly_pred_function = [](std::vector<float> coeffs, std::vector<float> xs){
 			assert(xs.size() == 1);
 			assert(coeffs.size() >= 1);
 			auto x = xs[0];
@@ -38,11 +46,11 @@ namespace numeric {
 		};
 
 		// build initial params
-		std::vector<double> coeffs;
+		std::vector<float> coeffs;
 		for(int i=0;i<=degree_of_polynomial;i++){coeffs.push_back(0.0);}
 
 		// pack xs into mtx
-		std::vector<std::vector<double>> mtx_xs;
+		std::vector<std::vector<float>> mtx_xs;
 		for(int i=0;i<xs.size();i++){mtx_xs.push_back({xs[i]});}
 
 		// delegate
