@@ -11,8 +11,9 @@ test:
 	./test_neural_network
 
 clean:
-	rm test_derivative
-	rm test_gradient_descent
-	rm test_polynomial_regression
-	rm test_logistic_regression
-	rm test_neural_network
+	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.cpp
+	rm -f test_derivative
+	rm -f test_gradient_descent
+	rm -f test_polynomial_regression
+	rm -f test_logistic_regression
+	rm -f test_neural_network
