@@ -76,7 +76,9 @@ namespace numeric {
 		auto ys_mtx = {ys};
 
 		// activations and transfers
-		auto [as, bs] = feedforward(xs, weights);
+		auto tpl = feedforward(xs, weights);
+		auto as = std::get<0>(tpl);
+		auto bs = std::get<1>(tpl);
 
 		// backpropagation algorithm
 		for(int i=as.size() - 1 ; i >= 0 ; i--){
