@@ -79,9 +79,15 @@ namespace numeric
     {
 
         // pow2 function
-        auto pow2 = [](float x)
+        auto pow2div2 = [](float x)
         {
-            return x*x / 2.0f;
+            return x * x / 2.0f;
+        };
+
+        // derivative of transfer function
+        auto activation_derivative_function = [](float x)
+        {
+            return x * (1.0f - x);
         };
 
         // convert ys to mtx
@@ -92,25 +98,49 @@ namespace numeric
         auto as = std::get<0>(tpl);
         auto bs = std::get<1>(tpl);
 
-        // backpropagation algorithm
+        // activation function derivative(s)
+        auto activation_function_derivative = [](float x)
+        {
+            return x * (1.0f - x);
+        };
+        auto as_derivatives = std::vector<matrix::FloatMatrix>();
+        for(int i=0; i<as.size(); i++)
+        {
+            as_derivatives.push_back(matrix::apply_function(as[i], activation_function_derivative));
+        }
+
+        // delta(s)
+        auto deltas = std::vector<matrix::FloatMatrix>();
         for(int i=as.size() - 1 ; i >= 0 ; i--)
         {
-
-            // derivative of loss function
-            auto loss_mtx = matrix::FloatMatrix();
+            auto delta = matrix::FloatMatrix();
             if(i == as.size() - 1)
             {
-                loss_mtx = matrix::apply_function(matrix::subtract(as[i], ys_mtx), pow2);
-                matrix::print_matrix(loss_mtx);
+                delta = matrix::dotproduct(matrix::subtract(ys_mtx, as[i]), as_derivatives[i]);
             }
             else
             {
+                delta = matrix::dotproduct(matrix::mul(deltas[deltas.size() - 1], matrix::transpose(weights[i])), as_derivatives[i]);
             }
 
-            // derivative of activation function
+            // debug
+            std::cout << "delta[" << i << "]" << std::endl;
+            matrix::print_matrix(delta);
 
+            // store delta
+            deltas.push_back(delta);
         }
 
+        // update weight(s)
+        auto updates = std::vector<matrix::FloatMatrix>();
+        for(int i=0; i<weights.size(); i++)
+        {
+            // TODO : verify indices
+            auto weight_update = matrix::scalar(matrix::mul(matrix::transpose(as[i]), deltas[i]), learning_rate);
+            weight_updates.push_back(weight_update);
+        }
+
+        // return
         return weights;
 
     }
