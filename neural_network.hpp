@@ -70,10 +70,10 @@ namespace nn
     }
 
     /*!
-     * In fitting a neural network, backpropagation computes the gradient of the loss function 
-     * with respect to the weights of the network for a single input–output example, and does so efficiently, 
-     * unlike a naive direct computation of the gradient with respect to each weight individually. 
-     * This efficiency makes it feasible to use gradient methods for training multilayer networks, 
+     * In fitting a neural network, backpropagation computes the gradient of the loss function
+     * with respect to the weights of the network for a single input–output example, and does so efficiently,
+     * unlike a naive direct computation of the gradient with respect to each weight individually.
+     * This efficiency makes it feasible to use gradient methods for training multilayer networks,
      * updating weights to minimize loss; gradient descent, or variants such as stochastic gradient descent, are commonly used.
      */
     std::vector<matrix::FloatMatrix> backpropagation(
