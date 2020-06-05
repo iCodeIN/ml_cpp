@@ -69,6 +69,31 @@ namespace nn
         return feedforward(mtx, weights);
     }
 
+    /*! The Loss Function is one of the important components of Neural Networks. 
+     * Loss is nothing but a prediction error of Neural Net. 
+     * And the method to calculate the loss is called Loss Function.
+     */
+    matrix::FloatMatrix loss(const matrix::FloatMatrix& xs, const matrix::FloatMatrix& ys, const std::vector<matrix::FloatMatrix>& weights)
+    {
+
+        // forward pass
+        auto as = std::get<0>(feedforward(xs, weights));
+
+        // predicted ys
+        auto ys_pred = as[as.size()-1];
+
+        // aggregate loss
+        auto loss_mtx = matrix::zero(1, matrix::cols(ys));
+        for(int i=0; i<matrix::rows(ys); i++)
+        {
+            for(int j=0; j<matrix::cols(ys); j++)
+            {
+                loss_mtx[0][j] += pow(ys[i][j] - ys_pred[i][j], 2.0f);
+            }
+        }
+        return matrix::scalar(loss_mtx, 1.0f / xs.size());
+    }
+
     /*!
      * In fitting a neural network, backpropagation computes the gradient of the loss function
      * with respect to the weights of the network for a single input–output example, and does so efficiently,
@@ -139,6 +164,8 @@ namespace nn
 
     }
 
+    /*!
+     */
     std::vector<matrix::FloatMatrix> train(
         const matrix::FloatMatrix& xs,
         const matrix::FloatMatrix& ys,
