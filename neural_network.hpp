@@ -44,38 +44,22 @@ namespace numeric
         // run the input through all layers
         for(int i = 0 ; i < weights.size() ; i++)
         {
-
-            // debug
-            std::cout << "as[" << as.size() - 1 << "]" << std::endl;
-            matrix::print_matrix(as[as.size() - 1]);
-            std::cout << std::endl;
-
-            std::cout << "weights[" << i << "]" << std::endl;
-            matrix::print_matrix(weights[i]);
-            std::cout << std::endl;
-
             // matrix multiplication
             bs.push_back(matrix::mul(as[as.size() - 1], weights[i]));
-
-            std::cout << "bs[" << bs.size() - 1 << "]" << std::endl;
-            matrix::print_matrix(bs[bs.size() - 1]);
-            std::cout << std::endl;
 
             // logistic function
             as.push_back(matrix::apply_function(bs[bs.size()-1], activation_function));
         }
 
-        // debug
-        std::cout << "as[" << as.size() - 1 << "]" << std::endl;
-        matrix::print_matrix(as[as.size() - 1]);
-        std::cout << std::endl;
-
-
         // output
         return std::make_tuple(as, bs);
     }
 
-    std::vector<matrix::FloatMatrix> backpropagation(const std::vector<float>& xs, const std::vector<float>& ys, const std::vector<matrix::FloatMatrix>& weights)
+    std::vector<matrix::FloatMatrix> backpropagation(
+        const std::vector<float>& xs,
+        const std::vector<float>& ys,
+        const std::vector<matrix::FloatMatrix>& weights,
+        float learning_rate = 0.1)
     {
 
         // pow2 function
@@ -120,29 +104,38 @@ namespace numeric
             }
             else
             {
-                delta = matrix::dotproduct(matrix::mul(deltas[deltas.size() - 1], matrix::transpose(weights[i])), as_derivatives[i]);
+                delta = matrix::dotproduct(matrix::mul(deltas[0], matrix::transpose(weights[i])), as_derivatives[i]);
             }
-
-            // debug
-            std::cout << "delta[" << i << "]" << std::endl;
-            matrix::print_matrix(delta);
-
-            // store delta
-            deltas.push_back(delta);
+            deltas.insert(deltas.begin(), delta);
         }
 
         // update weight(s)
-        auto updates = std::vector<matrix::FloatMatrix>();
-        for(int i=0; i<weights.size(); i++)
+        std::cout << std::endl;
+        auto weights_out = std::vector<matrix::FloatMatrix>();
+        for(int i = 1 ; i < deltas.size() ; i++ )
         {
-            // TODO : verify indices
-            auto weight_update = matrix::scalar(matrix::mul(matrix::transpose(as[i]), deltas[i]), learning_rate);
-            weight_updates.push_back(weight_update);
+            auto weight_update = matrix::scalar(matrix::mul(matrix::transpose(as[i-1]), deltas[i]), learning_rate);
+            weights_out.push_back(matrix::add(weights[i - 1], weight_update));
         }
 
         // return
-        return weights;
+        return weights_out;
 
+    }
+
+    std::vector<matrix::FloatMatrix> train(
+        const std::vector<float> xs,
+        const std::vector<float> ys,
+        const std::vector<matrix::FloatMatrix>& initial_weights)
+    {
+        auto w = backpropagation(xs, ys, initial_weights);
+        for(int i=0; i<1000; i++)
+        {
+            w = backpropagation(xs, ys, w, 0.1f);
+            auto ys_out = std::get<0>(feedforward(xs, w));
+            matrix::print_matrix(ys_out[ys_out.size()-1]);
+        }
+        return w;
     }
 
 }
