@@ -13,16 +13,22 @@ namespace matrix
 
     typedef std::vector<std::vector<float>> FloatMatrix;
 
+    /*! return the number of rows in a matrix
+     */
     int rows(const FloatMatrix& m)
     {
         return m.size();
     }
 
+    /*! return the number of columns in a matrix
+     */
     int cols(const FloatMatrix& m)
     {
         return m.size() == 0 ? 0 : m[0].size();
     }
 
+    /*! return a matrix of specified dimensions, filled with zeroes
+     */
     FloatMatrix zero(int rows, int cols)
     {
         assert(rows >= 0);
@@ -40,6 +46,8 @@ namespace matrix
         return out;
     }
 
+    /*! return an identity matrix of specified dimensions
+     */
     FloatMatrix eye(int rows, int cols)
     {
         assert(rows >= 0);
@@ -53,6 +61,8 @@ namespace matrix
         return out;
     }
 
+    /*! return a matrix of specified dimensions, filled with elements from [0 .. 1]
+     */
     FloatMatrix random(int rows, int cols)
     {
         assert(rows >= 0);
@@ -72,6 +82,8 @@ namespace matrix
         return out;
     }
 
+    /*! return the largest value from a given matrix
+     */
     float max(const FloatMatrix& m)
     {
         assert(rows(m) > 0);
@@ -87,6 +99,8 @@ namespace matrix
         return out;
     }
 
+    /*! return the smallest value from a given matrix
+     */
     float min(const FloatMatrix& m)
     {
         assert(rows(m) > 0);
@@ -102,6 +116,8 @@ namespace matrix
         return out;
     }
 
+    /*! add two matrices of the same dimensions
+     */
     FloatMatrix add(const FloatMatrix& a, const FloatMatrix& b)
     {
         assert(rows(a) == rows(b));
@@ -119,6 +135,8 @@ namespace matrix
         return out;
     }
 
+    /* subtract two matrices of the same dimensions
+     */
     FloatMatrix subtract(const FloatMatrix& a, const FloatMatrix& b)
     {
         assert(rows(a) == rows(b));
@@ -136,6 +154,8 @@ namespace matrix
         return out;
     }
 
+    /*! calculate the elementwise product of two matrices of the same dimensions
+     */
     FloatMatrix dotproduct(const FloatMatrix& a, const FloatMatrix& b)
     {
         assert(rows(a) == rows(b));
@@ -153,6 +173,8 @@ namespace matrix
         return out;
     }
 
+    /*! multiply each element in a specified matrix with a specified scalar
+     */
     FloatMatrix scalar(const FloatMatrix& a, float b)
     {
         assert(rows(a) > 0);

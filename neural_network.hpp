@@ -8,9 +8,12 @@
 
 #include "matrix.hpp"
 
-namespace numeric
+namespace nn
 {
 
+    /*!
+     * Initialize the weight matrices of a neural network.
+     */
     std::vector<matrix::FloatMatrix> init_neural_network(std::vector<int> layer_sizes)
     {
         assert(layer_sizes.size() >= 2);
@@ -24,7 +27,10 @@ namespace numeric
         return mtx;
     }
 
-    std::tuple<std::vector<matrix::FloatMatrix>, std::vector<matrix::FloatMatrix>> feedforward(const std::vector<float>& xs, const std::vector<matrix::FloatMatrix>& weights)
+    /*!
+     * Feed an input matrix to a neural network with specified weights
+     */
+    std::tuple<std::vector<matrix::FloatMatrix>, std::vector<matrix::FloatMatrix>> feedforward(const matrix::FloatMatrix& xs, const std::vector<matrix::FloatMatrix>& weights)
     {
 
         std::vector<matrix::FloatMatrix> as;
@@ -36,10 +42,8 @@ namespace numeric
             return 1.0f / (1.0f + exp(-x));
         };
 
-        // convert input to matrix
-        auto xs_mtx = matrix::FloatMatrix();
-        xs_mtx.push_back(xs);
-        as.push_back(xs_mtx);
+        // initialize as
+        as.push_back(xs);
 
         // run the input through all layers
         for(int i = 0 ; i < weights.size() ; i++)
@@ -55,18 +59,30 @@ namespace numeric
         return std::make_tuple(as, bs);
     }
 
+    /*!
+     * Feed an input vector (single row) to a neural network with specified weights
+     */
+    std::tuple<std::vector<matrix::FloatMatrix>, std::vector<matrix::FloatMatrix>> feedforward(const std::vector<float>& xs, const std::vector<matrix::FloatMatrix>& weights)
+    {
+        auto mtx = matrix::FloatMatrix();
+        mtx.push_back(xs);
+        return feedforward(mtx, weights);
+    }
+
+    /*!
+     * In fitting a neural network, backpropagation computes the gradient of the loss function 
+     * with respect to the weights of the network for a single input–output example, and does so efficiently, 
+     * unlike a naive direct computation of the gradient with respect to each weight individually. 
+     * This efficiency makes it feasible to use gradient methods for training multilayer networks, 
+     * updating weights to minimize loss; gradient descent, or variants such as stochastic gradient descent, are commonly used.
+     */
     std::vector<matrix::FloatMatrix> backpropagation(
         const std::vector<float>& xs,
         const std::vector<float>& ys,
         const std::vector<matrix::FloatMatrix>& weights,
-        float learning_rate = 0.1)
+        float learning_rate = 0.1f
+    )
     {
-
-        // pow2 function
-        auto pow2div2 = [](float x)
-        {
-            return x * x / 2.0f;
-        };
 
         // derivative of transfer function
         auto activation_derivative_function = [](float x)
@@ -106,11 +122,11 @@ namespace numeric
             {
                 delta = matrix::dotproduct(matrix::mul(deltas[0], matrix::transpose(weights[i])), as_derivatives[i]);
             }
+            // insert
             deltas.insert(deltas.begin(), delta);
         }
 
         // update weight(s)
-        std::cout << std::endl;
         auto weights_out = std::vector<matrix::FloatMatrix>();
         for(int i = 1 ; i < deltas.size() ; i++ )
         {
@@ -124,16 +140,22 @@ namespace numeric
     }
 
     std::vector<matrix::FloatMatrix> train(
-        const std::vector<float> xs,
-        const std::vector<float> ys,
-        const std::vector<matrix::FloatMatrix>& initial_weights)
+        const matrix::FloatMatrix& xs,
+        const matrix::FloatMatrix& ys,
+        const std::vector<matrix::FloatMatrix>& initial_weights,
+        const std::function<float(int)>& learning_rate_schedule,
+        int max_number_of_iterations = 16384
+    )
     {
-        auto w = backpropagation(xs, ys, initial_weights);
-        for(int i=0; i<1000; i++)
+        auto learning_rate = learning_rate_schedule(0);
+        auto w = backpropagation(xs[0], ys[0], initial_weights, learning_rate);
+        for(int i=0; i<max_number_of_iterations; i++)
         {
-            w = backpropagation(xs, ys, w, 0.1f);
-            auto ys_out = std::get<0>(feedforward(xs, w));
-            matrix::print_matrix(ys_out[ys_out.size()-1]);
+            for(int j=0; j<xs.size(); j++)
+            {
+                w = backpropagation(xs[j], ys[j], w, 1.0f);
+            }
+            learning_rate = learning_rate_schedule(i);
         }
         return w;
     }

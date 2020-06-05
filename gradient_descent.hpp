@@ -9,7 +9,10 @@
 
 namespace numeric
 {
-
+    /*!
+     * Learning rate schedules seek to adjust the learning rate during training by reducing the learning rate according to a pre-defined schedule.
+     * Step decay schedule drops the learning rate by a factor every few epochs.
+     */
     std::function<float(int)> step_decay_learning_rate(float initial_learning_rate = 1.0f, float decay = 0.5f, int epochs_drop = 10)
     {
         return [decay, initial_learning_rate, epochs_drop](int iteration_nr)
@@ -26,6 +29,18 @@ namespace numeric
 
             // return
             return initial_learning_rate * pow(decay, a);
+        };
+    }
+
+    /*!
+     * Learning rate schedules seek to adjust the learning rate during training by reducing the learning rate according to a pre-defined schedule.
+     * Constant learning rate is the default learning rate schedule, it can serve as a baseline for us to experiment with different learning rate strategies.
+     */
+    std::function<float(int)> constant_learning_rate(float initial_learning_rate)
+    {
+        return [initial_learning_rate](int iteration_nr)
+        {
+            return initial_learning_rate;
         };
     }
 
