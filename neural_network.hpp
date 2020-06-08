@@ -69,8 +69,8 @@ namespace nn
         return feedforward(mtx, weights);
     }
 
-    /*! The Loss Function is one of the important components of Neural Networks. 
-     * Loss is nothing but a prediction error of Neural Net. 
+    /*! The Loss Function is one of the important components of Neural Networks.
+     * Loss is nothing but a prediction error of Neural Net.
      * And the method to calculate the loss is called Loss Function.
      */
     matrix::FloatMatrix loss(const matrix::FloatMatrix& xs, const matrix::FloatMatrix& ys, const std::vector<matrix::FloatMatrix>& weights)
