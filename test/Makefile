@@ -4,11 +4,13 @@ test:
 	g++ -std=c++17 -o test_polynomial_regression test_polynomial_regression_main.cpp
 	g++ -std=c++17 -o test_logistic_regression test_logistic_regression_main.cpp
 	g++ -std=c++17 -o test_neural_network test_neural_network_main.cpp
+	g++ -std=c++17 -o test_word2vec test_word2vec_main.cpp
 	./test_derivative
 	./test_gradient_descent
 	./test_polynomial_regression
 	./test_logistic_regression
 	./test_neural_network
+	./test_word2vec
 
 clean:
 	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.cpp
