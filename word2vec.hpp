@@ -2,10 +2,11 @@
 
 #include "matrix.hpp"
 
+#include <map>
 #include <tuple>
 #include <vector>
 
-namespace nn
+namespace word2vec
 {
 
     std::vector<matrix::FloatMatrix> train(
@@ -13,6 +14,14 @@ namespace nn
         std::vector<matrix::FloatMatrix> weights,
         int window_size = 5)
     {
+
+        // frequency table
+        std::map<long,long> word_frequency;
+        for(int i=0; i<sequence.size(); i++)
+        {
+            ++word_frequency[sequence[i]];
+        }
+
         // window view on sequence
         for(int i=window_size; i<sequence.size() - window_size; i++)
         {
