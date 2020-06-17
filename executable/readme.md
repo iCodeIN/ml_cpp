@@ -13,7 +13,7 @@
     
 ### 2. Train a neural network on the example data
 
-   cat example_xor | ./nn -train -size "2,3,1" -iterations 100 -o "nn_xor_100" 
+    cat example_xor | ./nn -train -size "2,3,1" -iterations 100 -o "nn_xor_100" 
    
    
 ### 3. You should now have a file nn_xor_100 containing the weights of the neural network
