@@ -3,6 +3,7 @@
 #include "../neural_network.hpp"
 
 #include <assert.h>
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -97,6 +98,22 @@ int main(int argc, char* argv[]){
 		nn = nn::init_neural_network(dims);
 	}
 	if(has_arg(argc, argv, "-i")){
+		nn.clear();
+		std::ifstream file_handle(arg(argc, argv, "-i"));
+		std::string line;
+		while(std::getline(file_handle, line)){
+			auto rows = std::stoi(explode(line, '\t')[0]);
+			auto cols = std::stoi(explode(line, '\t')[1]);
+			auto mtx = matrix::zero(rows, cols);
+			for(int i=0;i<rows;i++){
+				std::getline(file_handle, line);
+				auto tokens = explode(line, '\t');
+				for(int j=0;j<cols;j++){
+					mtx[i][j] = std::stof(tokens[j]);
+				}
+			}
+			nn.push_back(mtx);
+		}
 	}
 	assert(nn.size() > 0);
 	assert(matrix::rows(nn[0]) == matrix::cols(xs));
@@ -113,7 +130,18 @@ int main(int argc, char* argv[]){
 
 	// store
 	if(has_arg(argc, argv, "-o")){
-		
+		std::ofstream file_handle;
+		file_handle.open(arg(argc, argv, "-o"));
+		// write each layer
+		for(int i=0;i<nn.size();i++){
+			file_handle << matrix::rows(nn[i]) << "\t" << matrix::cols(nn[i]) << std::endl;
+			for(int j=0;j<matrix::rows(nn[i]);j++){
+				for(int k=0;k<matrix::cols(nn[i]);k++){
+					file_handle << nn[i][j][k] << "\t";
+				}
+				file_handle << std::endl;
+			}
+		}
 	}
 
 }
