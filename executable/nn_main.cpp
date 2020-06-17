@@ -35,7 +35,7 @@ const std::vector<std::string> explode(const std::string& s, const char& c)
     return v;
 }
 
-std::tuple<matrix::FloatMatrix, matrix::FloatMatrix> read_cin_data()
+std::tuple<matrix::FloatMatrix, matrix::FloatMatrix> read_cin_training_data()
 {
     // read input data from cin
     std::vector<std::vector<float>> xs;
@@ -60,6 +60,26 @@ std::tuple<matrix::FloatMatrix, matrix::FloatMatrix> read_cin_data()
         ys.push_back(row_ys);
     }
     return std::make_tuple(xs, ys);
+}
+
+matrix::FloatMatrix read_cin_data()
+{
+    // read input data from cin
+    std::vector<std::vector<float>> xs;
+    for(std::string line; std::getline(std::cin, line);)
+    {
+        auto tokens = explode(line, '\t');
+
+        // xs
+        std::vector<float> row_xs;
+        for(int i=0; i<tokens.size(); i++)
+        {
+            row_xs.push_back(std::stof(tokens[i]));
+        }
+        assert(xs.size() == 0 || xs[xs.size() - 1].size() == row_xs.size());
+        xs.push_back(row_xs);
+    }
+    return xs;
 }
 
 std::vector<matrix::FloatMatrix> read_network(std::string file_name)
@@ -135,11 +155,6 @@ std::string arg(int argc, char* argv[], std::string key)
 int main(int argc, char* argv[])
 {
 
-    // read input data from cin
-    auto data = read_cin_data();
-    auto xs = std::get<0>(data);
-    auto ys = std::get<1>(data);
-
     // determine network topology
     auto nn = nn::init_neural_network({1, 1});
     if(has_arg(argc, argv, "-size"))
@@ -157,7 +172,6 @@ int main(int argc, char* argv[])
         nn = read_network(arg(argc, argv, "-i"));
     }
     assert(nn.size() > 0);
-    assert(matrix::rows(nn[0]) == matrix::cols(xs));
 
     // determine number of iterations
     auto iterations = 1024;
@@ -167,20 +181,54 @@ int main(int argc, char* argv[])
         assert(iterations > 0);
     }
 
+    // check mode
+    auto mode = 0;
+	mode += has_arg(argc, argv, "-train") ? 1 : 0;
+	mode += has_arg(argc, argv, "-feedforward") ? 1 : 0;
+	mode += has_arg(argc, argv, "-loss") ? 1 : 0;
+    assert(mode == 1);
+
     // train
     if(has_arg(argc, argv, "-train"))
     {
+    	// read input data from cin
+    	auto data = read_cin_training_data();
+    	auto xs = std::get<0>(data);
+    	auto ys = std::get<1>(data);
+	
+	// check dimensions
+    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
+
+	// train
         nn = nn::train(xs, ys, nn, numeric::constant_learning_rate(0.1), iterations);
     }
-    // forward
-    if(has_arg(argc, argv, "-forward"))
+
+    // feedforward
+    if(has_arg(argc, argv, "-feedforward"))
     {
+	// read input data from cin
+	auto xs = read_cin_data();
+
+	// check dimensions
+    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
+	
+	// feedforward
         auto as = std::get<0>(nn::feedforward(xs, nn));
         matrix::print_matrix(as[as.size() - 1]);
     }
+
     // loss
     if(has_arg(argc, argv, "-loss"))
     {
+    	// read input data from cin
+    	auto data = read_cin_training_data();
+    	auto xs = std::get<0>(data);
+    	auto ys = std::get<1>(data);
+	
+	// check dimensions
+    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
+
+	// calculate loss
         matrix::print_matrix(nn::loss(xs, ys, nn));
     }
 
