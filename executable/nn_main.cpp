@@ -199,8 +199,15 @@ int main(int argc, char* argv[])
 	// check dimensions
     	assert(matrix::rows(nn[0]) == matrix::cols(xs));
 
-	// train
-        nn = nn::train(xs, ys, nn, numeric::constant_learning_rate(0.1), iterations);
+	// train	
+	bool debug = has_arg(argc, argv, "-debug");
+	for(int i=0;i<iterations;i+=32){
+        	nn = nn::train(xs, ys, nn, numeric::constant_learning_rate(0.1), 32);
+		if(debug){
+			std::cout << "Iteration : " << i << std::endl;
+			matrix::print_matrix(nn::loss(xs,ys,nn));
+		}
+	}
     }
 
     // feedforward

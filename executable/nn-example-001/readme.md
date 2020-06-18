@@ -2,7 +2,7 @@
 
 **nn** is a command-line utility offering neural networks in a linux-style fashion. 
 
-## example usage
+## Example Usage
 
 ### 1. Create an example data file containing the XOR gate logic
 
@@ -20,7 +20,7 @@ We specify some parameters:
 - train : indicates we want to train a neural network
 - size : indicates the number of neurons in each layer (first layer must equal the number of inputs)
 - iterations : indicates the number of iterations of training
-- o : provides a file path where the network should be stored
+- o : indicates where the resulting network should be stored
    
 ### 3. You should now have a file nn_xor_100 containing the weights of the neural network
 
