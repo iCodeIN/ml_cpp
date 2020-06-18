@@ -15,8 +15,7 @@ test:
 	./word2vec
 
 clean:
-	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.cpp
-	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.hpp
+	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.[ch]pp
 	rm -f derivative
 	rm -f gradient_descent
 	rm -f polynomial_regression

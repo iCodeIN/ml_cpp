@@ -183,43 +183,45 @@ int main(int argc, char* argv[])
 
     // check mode
     auto mode = 0;
-	mode += has_arg(argc, argv, "-train") ? 1 : 0;
-	mode += has_arg(argc, argv, "-feedforward") ? 1 : 0;
-	mode += has_arg(argc, argv, "-loss") ? 1 : 0;
+    mode += has_arg(argc, argv, "-train") ? 1 : 0;
+    mode += has_arg(argc, argv, "-feedforward") ? 1 : 0;
+    mode += has_arg(argc, argv, "-loss") ? 1 : 0;
     assert(mode == 1);
 
     // train
     if(has_arg(argc, argv, "-train"))
     {
-    	// read input data from cin
-    	auto data = read_cin_training_data();
-    	auto xs = std::get<0>(data);
-    	auto ys = std::get<1>(data);
-	
-	// check dimensions
-    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
+        // read input data from cin
+        auto data = read_cin_training_data();
+        auto xs = std::get<0>(data);
+        auto ys = std::get<1>(data);
 
-	// train	
-	bool debug = has_arg(argc, argv, "-debug");
-	for(int i=0;i<iterations;i+=32){
-        	nn = nn::train(xs, ys, nn, numeric::constant_learning_rate(0.1), 32);
-		if(debug){
-			std::cout << "Iteration : " << i << std::endl;
-			matrix::print_matrix(nn::loss(xs,ys,nn));
-		}
-	}
+        // check dimensions
+        assert(matrix::rows(nn[0]) == matrix::cols(xs));
+
+        // train
+        bool debug = has_arg(argc, argv, "-debug");
+        for(int i=0; i<iterations; i+=32)
+        {
+            nn = nn::train(xs, ys, nn, numeric::constant_learning_rate(0.1), 32);
+            if(debug)
+            {
+                std::cout << "Iteration : " << i << std::endl;
+                matrix::print_matrix(nn::loss(xs,ys,nn));
+            }
+        }
     }
 
     // feedforward
     if(has_arg(argc, argv, "-feedforward"))
     {
-	// read input data from cin
-	auto xs = read_cin_data();
+        // read input data from cin
+        auto xs = read_cin_data();
 
-	// check dimensions
-    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
-	
-	// feedforward
+        // check dimensions
+        assert(matrix::rows(nn[0]) == matrix::cols(xs));
+
+        // feedforward
         auto as = std::get<0>(nn::feedforward(xs, nn));
         matrix::print_matrix(as[as.size() - 1]);
     }
@@ -227,15 +229,15 @@ int main(int argc, char* argv[])
     // loss
     if(has_arg(argc, argv, "-loss"))
     {
-    	// read input data from cin
-    	auto data = read_cin_training_data();
-    	auto xs = std::get<0>(data);
-    	auto ys = std::get<1>(data);
-	
-	// check dimensions
-    	assert(matrix::rows(nn[0]) == matrix::cols(xs));
+        // read input data from cin
+        auto data = read_cin_training_data();
+        auto xs = std::get<0>(data);
+        auto ys = std::get<1>(data);
 
-	// calculate loss
+        // check dimensions
+        assert(matrix::rows(nn[0]) == matrix::cols(xs));
+
+        // calculate loss
         matrix::print_matrix(nn::loss(xs, ys, nn));
     }
 

@@ -1,5 +1,5 @@
 clean:
-	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.hpp
+	astyle -q --style=allman --indent=spaces=4 --indent-classes --indent-switches --indent-cases --indent-namespaces --add-brackets --close-templates --suffix=none *.[ch]pp
 	cd unittest && $(MAKE) clean
 	cd executable && $(MAKE) clean
 
